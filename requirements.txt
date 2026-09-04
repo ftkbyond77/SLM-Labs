@@ -1,0 +1,2 @@
+# !pip install -q "torch>=2.3" "mediapipe>=0.10.14" opencv-python-headless "huggingface_hub>=0.24" \
+#                 pandas numpy scikit-learn jiwer sacrebleu matplotlib tqdm openai transformers scipy

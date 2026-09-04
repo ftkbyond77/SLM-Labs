@@ -1,0 +1,112 @@
+"""Metrics: CTC decode (+confidence, +emission frames), WER/CER, BLEU/chrF, eval loops, open-set AUROC"""
+from __future__ import annotations
+
+import numpy as np
+import torch
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+
+from .config import DEVICE
+from .vocab import SIGN_CLASSES, NULL_CLASS, BLANK, ids_to_words
+
+
+def ctc_greedy_decode(logits_ctc, lens, drop_null=True):
+    pred = logits_ctc.argmax(-1).cpu().numpy(); out = []
+    for p, L in zip(pred, lens):
+        seq, prev = [], BLANK
+        for t in p[:L]:
+            if t != BLANK and t != prev:
+                seq.append(int(t) - 1)
+            prev = t
+        if drop_null:
+            seq = [c for c in seq if SIGN_CLASSES[c] != NULL_CLASS]
+        out.append(seq)
+    return out
+
+
+@torch.no_grad()
+def ctc_decode_with_confidence(logits_ctc, lens, drop_null=True):
+    """greedy CTC → list[dict(cls, conf, start, end)] ต่อคลิป ; conf = mean max-prob ของเฟรมที่ emit token"""
+    probs = logits_ctc.float().softmax(-1).cpu().numpy(); out = []
+    for p, L in zip(probs, lens):
+        am = p[:L].argmax(-1); toks, prev, cur = [], BLANK, None
+        for t, tok in enumerate(am):
+            if tok != BLANK and tok != prev:
+                if cur: toks.append(cur)
+                cur = dict(cls=int(tok) - 1, probs=[], start=t, end=t + 1)
+            if tok != BLANK and cur is not None:
+                cur["probs"].append(float(p[t, tok])); cur["end"] = t + 1
+            prev = tok
+        if cur: toks.append(cur)
+        res = []
+        for tk in toks:
+            if drop_null and SIGN_CLASSES[tk["cls"]] == NULL_CLASS:
+                continue
+            res.append(dict(cls=tk["cls"], conf=float(np.mean(tk["probs"])), start=tk["start"], end=tk["end"]))
+        out.append(res)
+    return out
+
+
+def wer_cer(refs_words, hyps_words):
+    import jiwer
+    r = [" ".join(x) for x in refs_words]; h = [" ".join(x) if x else "<empty>" for x in hyps_words]
+    wer = jiwer.wer(r, h)
+    cer = jiwer.cer(["".join(x) for x in refs_words], ["".join(x) if x else "?" for x in hyps_words])
+    return wer, cer
+
+
+def bleu_chrf(refs, hyps):
+    import sacrebleu
+    bleu = sacrebleu.corpus_bleu(hyps, [refs], tokenize="char").score
+    chrf = sacrebleu.corpus_chrf(hyps, [refs]).score
+    return bleu, chrf
+
+
+@torch.no_grad()
+def eval_isolated(model, dl, use_face=True):
+    model.eval(); ys, ps, embs = [], [], []
+    for x in dl:
+        o = model(x["hand"].to(DEVICE), x["body"].to(DEVICE), x["face"].to(DEVICE), x["mask"].to(DEVICE), use_face)
+        ps += o["logits_cls"].argmax(-1).cpu().tolist(); ys += x["targets"].tolist(); embs.append(o["emb"].cpu())
+    return dict(acc=accuracy_score(ys, ps), macro_f1=f1_score(ys, ps, average="macro"), y=ys, p=ps, emb=torch.cat(embs).numpy())
+
+
+@torch.no_grad()
+def eval_sequence(model, dl, use_face=True):
+    model.eval(); refs, hyps = [], []
+    for x in dl:
+        o = model(x["hand"].to(DEVICE), x["body"].to(DEVICE), x["face"].to(DEVICE), x["mask"].to(DEVICE), use_face)
+        hyps += [ids_to_words(s) for s in ctc_greedy_decode(o["logits_ctc"], x["lens"].tolist())]
+        i = 0
+        for L in x["target_lens"].tolist():
+            refs.append(ids_to_words([t - 1 for t in x["targets"][i:i + L].tolist()])); i += L
+    wer, cer = wer_cer(refs, hyps)
+    exact = float(np.mean([r == h for r, h in zip(refs, hyps)]))
+    return dict(wer=wer, cer=cer, sent_acc=exact, refs=refs, hyps=hyps)
+
+
+def openset_auroc(known_scores, unknown_scores):
+    """score สูง = known ; → AUROC + TNR@95%TPR"""
+    y = np.r_[np.ones(len(known_scores)), np.zeros(len(unknown_scores))]
+    s = np.r_[known_scores, unknown_scores]
+    auroc = roc_auc_score(y, s) if len(set(y)) > 1 else float("nan")
+    thr = np.percentile(known_scores, 5)                     # 95% ของ known ผ่าน
+    tnr = float(np.mean(np.asarray(unknown_scores) < thr)) if len(unknown_scores) else float("nan")
+    return dict(auroc=float(auroc), tnr_at_95tpr=tnr, thr=float(thr))
+
+
+@torch.no_grad()
+def eval_isolated_shifted(model, items, strength: float, seed: int = 0, max_frames=None, bs=64):
+    """จำลอง "วิดีโอถ่ายคนละที่/คนละกล้อง": ใส่ augmentation (หมุน/ย่อขยาย/เลื่อน/mirror/speed) แรง = strength ลงบน test items แล้ววัด accuracy"""
+    import random
+    from .config import cfg, to_dev
+    from .features import augment, temporal_resample
+    from .data import pad_feats
+    random.seed(seed); np.random.seed(seed); model.eval()
+    max_frames = max_frames or cfg.MAX_FRAMES_ISO; ys, ps = [], []
+    for i in range(0, len(items), bs):
+        feats = []
+        for it in items[i:i + bs]:
+            f = augment(it["feat"], strength=strength) if strength > 0 else it["feat"]
+            feats.append(temporal_resample(f, max_frames) if len(f["hand"]) > max_frames else f); ys.append(it["label"])
+        o = model.forward_batch(to_dev(pad_feats(feats))); ps += o["logits_cls"].argmax(-1).cpu().tolist()
+    return dict(acc=accuracy_score(ys, ps), macro_f1=f1_score(ys, ps, average="macro"))

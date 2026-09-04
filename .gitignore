@@ -1,0 +1,9 @@
+.env
+data_test/
+prompt/
+data/
+outputs/
+memory/qdrant/
+memory_smoke/
+__pycache__/
+*.pyc
