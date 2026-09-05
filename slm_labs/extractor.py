@@ -111,10 +111,15 @@ def check_video_quality(df: pd.DataFrame, verbose=True) -> dict:
 
 
 def extract_cached(extractor, video_path, cache_dir: Path | None = None) -> pd.DataFrame:
-    """cache landmark CSV ไว้ที่ outputs/landmarks_cache/<stem>.csv (MediaPipe ช้า — ไม่ต้องรันซ้ำ)"""
+    """cache landmark CSV ไว้ที่ outputs/landmarks_cache/<stem>@<fps>fps.csv (MediaPipe ช้า — ไม่ต้องรันซ้ำ)
+
+    ชื่อไฟล์มี fps อยู่ด้วย เพราะ `cfg.TARGET_FPS` เป็นส่วนหนึ่งของ preprocessing — ถ้าเปลี่ยน fps
+    ต้องดึงใหม่ ไม่ใช่ใช้ cache เดิม (bug ของ v1/v2: cache 10 fps ถูกใช้ทั้งที่ dataset อยู่ที่ ~25 fps)
+    """
     cache_dir = Path(cache_dir or cfg.OUT_DIR / "landmarks_cache"); cache_dir.mkdir(parents=True, exist_ok=True)
     import json
-    p = cache_dir / (Path(video_path).stem + ".csv"); pm = p.with_suffix(".meta.json")
+    fps = getattr(extractor, "target_fps", cfg.TARGET_FPS)
+    p = cache_dir / f"{Path(video_path).stem}@{fps:g}fps.csv"; pm = p.with_suffix(".meta.json")
     if p.exists():
         df = pd.read_csv(p); df.attrs.update(dict(video=str(video_path), cached=True, fps_processed=float("nan")))
         if pm.exists():

@@ -1,7 +1,12 @@
 # SLM Labs — Architecture
 
-> v1 (Demo 1) = ส่วนที่ 1–9 ด้านล่าง (ออกแบบครั้งแรก) · **v2 = ส่วนที่ 10–14** (เพิ่มเพื่อให้ inference จริงใช้ได้: open-vocabulary, memory, SSL)
-> code: [`slm_labs/`](slm_labs) · ห้องทดลอง: [`SLM_Labs_main.ipynb`](SLM_Labs_main.ipynb) · ผลเทียบเก่า/ใหม่: `prompt/result/fixed_v1.md`
+> ⚠️ **เอกสารนี้คือการออกแบบของ v1/v2 (เก็บไว้อ้างอิง)** — ระบบที่ใช้จริงตอนนี้คือ **v3** ดู [`flow_system.md`](flow_system.md)
+> และผลการทดลอง + สิ่งที่แก้ ดู [`prompt/result/fixed_v2.md`](prompt/result/fixed_v2.md)
+> จุดที่ v3 ต่างจากเอกสารนี้: fps เป็น **15 fps เท่ากันทั้ง dataset และวิดีโอใหม่** (ไม่ใช่ 10 fps), `emb_head` ถูกฝึกด้วย
+> ArcFace จริง, Stage B freeze encoder และฝึกแค่ `ctc_head`, ตัด SSL (SignDINO) ออก, split ไม่มี leakage
+>
+> v1 (Demo 1) = ส่วนที่ 1–9 ด้านล่าง (ออกแบบครั้งแรก) · **v2 = ส่วนที่ 10–14**
+> code: [`slm_labs/`](slm_labs) · ห้องทดลอง: [`SLM_Labs_main.ipynb`](SLM_Labs_main.ipynb)
 
 ## 1. Input
 Namonpas/thai-sign-language-tsl51 · Datasets at Hugging Face (51 signs + null_act, 76 sentence patterns) + วิดีโอจริงใน `data_test/*.mp4` (ชื่อไฟล์ = ประโยคที่ annotate ไว้)

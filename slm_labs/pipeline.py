@@ -25,7 +25,7 @@ class SLMPipeline:
     def __init__(self, model=None, protos: Prototypes | None = None, memory: SignMemory | None = None,
                  ckpt: str | Path | None = None, extractor: HolisticExtractor | None = None, verbose=True):
         if model is None:
-            model = load_checkpoint(build_model(N_CLASSES, DEVICE), ckpt or cfg.OUT_DIR / "sign_encoder_v2.pt")
+            model = load_checkpoint(build_model(N_CLASSES, DEVICE), ckpt or cfg.OUT_DIR / "sign_encoder_v3.pt")
         self.model = model.eval()
         self.protos = protos or Prototypes.load(cfg.OUT_DIR / "prototypes.npz")
         self.memory = memory if memory is not None else SignMemory()
@@ -69,7 +69,7 @@ class SLMPipeline:
         res = dict(video=str(video_path), clip=clip, n_frames=int(analysis["T"]), words=words,
                    n_known=sum(w != UNK for w in words), n_unknown=sum(w == UNK for w in words),
                    slots=[{k: v for k, v in s.items() if k != "emb"} for s in analysis["slots"]],
-                   ctc_tokens=analysis["tokens"], face_cue=cue["text"], thai=thai, llm=prov, llm_extra=extra,
+                   face_cue=cue["text"], thai=thai, llm=prov, llm_extra=extra,
                    wav=str(wav) if wav else None, filename_annotation=ann, memory_stored=n_mem, quality=quality, latency=lat)
         if expected_words:
             res["wer"], res["cer"] = wer_cer([expected_words], [words])

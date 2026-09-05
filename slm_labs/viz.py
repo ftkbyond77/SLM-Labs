@@ -52,12 +52,12 @@ def plot_timeline(analysis: dict, title: str = "", fps=cfg.TARGET_FPS, ax=None, 
         ax.text((s["start"] + s["end"]) / 2 / fps, ymax * 0.9, lab, ha="center", va="top", fontsize=15, color=c, fontweight="bold")
         if s["status"] == "unknown" and s.get("nearest"):
             ax.text((s["start"] + s["end"]) / 2 / fps, ymax * 0.68, "≈" + s["nearest"][0][0] + f" {s['nearest'][0][1]:.2f}", ha="center", fontsize=9, color="#777")
-    if show_tokens:
-        for tk in analysis["tokens"]:
-            from .vocab import SIGN_CLASSES, CLASS2WORD
-            xs = idx_map[min(tk["start"], len(idx_map) - 1)] / fps
-            ax.plot([xs], [energy[min(tk["start"], len(energy) - 1)]], "v", color="#e63946", ms=7)
-            ax.text(xs, -ymax * 0.08, f"{CLASS2WORD[SIGN_CLASSES[tk['cls']]]}\n{tk['conf']:.2f}", ha="center", va="top", fontsize=9, color="#e63946")
+    if show_tokens:                                    # ผลดิบของ classifier ต่อ segment (ก่อนตัดสิน known/unknown)
+        for s in analysis["slots"]:
+            if s["status"] == "null" or not s.get("cls"):
+                continue
+            xs = (s["start"] + s["end"]) / 2 / fps
+            ax.text(xs, -ymax * 0.08, f"{s['cls'][0]}\n{s['cls'][1]:.2f}", ha="center", va="top", fontsize=9, color="#e63946")
     ax.set_xlim(0, T / fps); ax.set_ylim(-ymax * 0.35, ymax)
     ax.set_xlabel("time (s)"); ax.set_yticks([])
     ax.set_title(title, fontsize=15)

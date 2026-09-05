@@ -7,6 +7,7 @@ import random
 import numpy as np
 import pandas as pd
 
+from .config import cfg
 from .vocab import ALL_COLS, LH_COLS, RH_COLS, POSE_COLS, FACE_COLS
 
 HAND_DIM, BODY_DIM, FACE_DIM = 21 * 3 * 2 * 2 + 2, 6 * 3 + 5 * 3 + 6 * 3, 6 * 3 + 6 * 3 + 3   # 254, 51, 39
@@ -21,20 +22,52 @@ def _ffill_bfill(a: np.ndarray) -> np.ndarray:
     return df.fillna(0.0).values.reshape(a.shape)
 
 
-def load_landmarks(src) -> dict:
-    """path | DataFrame → dict(lh (T,21,3), rh, pose (T,6,3), face (T,6,3), t_ms (T,))"""
+def resample_landmarks(lm: dict, target_fps: float | None = None) -> dict:
+    """บังคับให้ทุกคลิปอยู่ที่ **fps เดียวกัน** โดยใช้ `t_ms` (เวลาจริง) เป็นแกน
+
+    ทำไมถึงสำคัญ: landmark ใน TSL-51 ถูกดึงที่ ~24-30 fps (user_sign fps_extracted=30, t_ms dt≈42 ms)
+    ส่วน `HolisticExtractor` ของเราดึงวิดีโอใหม่ที่ `cfg.TARGET_FPS` — ถ้าสองค่านี้ไม่ตรงกัน ท่าเดียวกัน
+    จะมีจำนวนเฟรมต่างกัน 2-3 เท่า และ encoder ที่เรียนจาก dataset จะอ่านวิดีโอจริงไม่ออกเลย
+    (นี่คือสาเหตุหลักที่ v1/v2 ทำนายคลิปจริงเป็นคนละคำทั้งหมด)
+
+    ใช้ nearest-neighbour ตามเวลา → รักษา NaN (เฟรมที่ไม่เจอมือ) ไว้ตามเดิม
+    """
+    fps = target_fps or cfg.TARGET_FPS
+    t = np.asarray(lm["t_ms"], np.float64)
+    if len(t) < 2 or not np.isfinite(t).all():
+        return lm
+    t = np.maximum.accumulate(t)                       # กัน timestamp ย้อนกลับ
+    dur_ms = float(t[-1] - t[0])
+    if dur_ms <= 0:
+        return lm
+    n = max(2, int(round(dur_ms / 1000.0 * fps)) + 1)
+    grid = np.linspace(t[0], t[-1], n)
+    idx = np.round(np.interp(grid, t, np.arange(len(t)))).astype(int).clip(0, len(t) - 1)
+    out = {k: v[idx] for k, v in lm.items() if k != "t_ms"}
+    out["t_ms"] = grid.astype(np.float32)
+    return out
+
+
+def load_landmarks(src, fps: float | None = None) -> dict:
+    """path | DataFrame → dict(lh (T,21,3), rh, pose (T,6,3), face (T,6,3), t_ms (T,))
+
+    resample ไปที่ `fps` (default `cfg.TARGET_FPS`) เสมอ — dataset และวิดีโอใหม่จึงอยู่บนแกนเวลาเดียวกัน
+    ส่ง fps=0 เพื่อปิด (ดูข้อมูลดิบ)
+    """
     df = src if isinstance(src, pd.DataFrame) else pd.read_csv(src)
     for c in ALL_COLS:
         if c not in df.columns:
             df[c] = np.nan
     T = len(df)
-    return dict(
+    lm = dict(
         lh=df[LH_COLS].values.reshape(T, 21, 3).astype(np.float32),
         rh=df[RH_COLS].values.reshape(T, 21, 3).astype(np.float32),
         pose=df[POSE_COLS].values.reshape(T, 6, 3).astype(np.float32),
         face=df[FACE_COLS].values.reshape(T, 6, 3).astype(np.float32),
         t_ms=df["t_ms"].values.astype(np.float32),
     )
+    fps = cfg.TARGET_FPS if fps is None else fps
+    return resample_landmarks(lm, fps) if fps else lm
 
 
 def make_features(lm: dict) -> dict:
@@ -167,13 +200,28 @@ def augment(feat: dict, strength: float = 1.0, temporal=True) -> dict:
     return {k: v + np.random.normal(0, AUG["noise"] * strength, v.shape).astype(np.float32) for k, v in f.items()}
 
 
-def random_view(feat: dict, frac_range: tuple, strength: float) -> dict:
-    """SignDINO-style view: random temporal crop (สัดส่วน frac_range ของคลิป) + spatial aug
-    global view = ครอบคลุมเกือบทั้งคลิป / local view = ช่วงสั้น ๆ (เหมือน "เห็นแค่บางคำ")"""
-    T = len(feat["hand"])
-    L = max(6, int(T * random.uniform(*frac_range)))
-    s = random.randint(0, max(0, T - L))
-    return augment(crop(feat, s, s + L), strength=strength, temporal=True)
+def active_span(feat: dict, wrist_y: float = 1.6, energy_frac: float = 0.4, pad: int = 2, min_frames: int = 8):
+    """ช่วงเฟรมที่ "กำลังทำท่า" ของทั้งคลิป (ตัดหัว-ท้ายที่มือยังพักอยู่)
+
+    ใช้กับ isolated clips ตอน train/eval เพื่อให้ **ตรงกับสิ่งที่โมเดลเจอตอน inference** — ที่นั่นคลิปถูกตัด
+    เป็น segment ด้วย hand-activity แล้ว ถ้า Stage A เรียนจากคลิปที่มีหัว-ท้ายพักยาว ๆ แต่ต้องทำนาย
+    segment ที่ตัดมาแล้ว จะเป็นคนละ distribution
+    """
+    act = hand_activity(feat)
+    e = act["energy"]; wy = np.nanmin(act["wrist_y"], axis=1)
+    raised = wy < wrist_y
+    ref = np.percentile(e[raised], 90) if raised.any() else np.percentile(e, 90)
+    active = raised | ((act["present"] > 0) & (e > energy_frac * max(float(ref), 1e-4)))
+    idx = np.flatnonzero(active)
+    if len(idx) < min_frames:
+        return 0, len(e)
+    s, t = max(0, int(idx[0]) - pad), min(len(e), int(idx[-1]) + 1 + pad)
+    return (s, t) if t - s >= min_frames else (0, len(e))
+
+
+def trim_to_active(feat: dict) -> dict:
+    s, e = active_span(feat)
+    return crop(feat, s, e)
 
 
 def time_reverse(feat: dict) -> dict:

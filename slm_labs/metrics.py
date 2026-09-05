@@ -9,8 +9,19 @@ from .config import DEVICE
 from .vocab import SIGN_CLASSES, NULL_CLASS, BLANK, ids_to_words
 
 
-def ctc_greedy_decode(logits_ctc, lens, drop_null=True):
-    pred = logits_ctc.argmax(-1).cpu().numpy(); out = []
+from .config import cfg
+
+
+def _penalise(logits_ctc, blank_penalty):
+    bp = cfg.BLANK_PENALTY if blank_penalty is None else blank_penalty
+    if bp:
+        logits_ctc = logits_ctc.clone(); logits_ctc[..., BLANK] -= bp
+    return logits_ctc
+
+
+def ctc_greedy_decode(logits_ctc, lens, drop_null=True, blank_penalty=None):
+    """lens = ความยาวหลัง stride (model.ctc_lens) ; blank_penalty ลบจาก blank logit (None = cfg.BLANK_PENALTY)"""
+    pred = _penalise(logits_ctc, blank_penalty).argmax(-1).cpu().numpy(); out = []
     for p, L in zip(pred, lens):
         seq, prev = [], BLANK
         for t in p[:L]:
@@ -24,9 +35,9 @@ def ctc_greedy_decode(logits_ctc, lens, drop_null=True):
 
 
 @torch.no_grad()
-def ctc_decode_with_confidence(logits_ctc, lens, drop_null=True):
-    """greedy CTC → list[dict(cls, conf, start, end)] ต่อคลิป ; conf = mean max-prob ของเฟรมที่ emit token"""
-    probs = logits_ctc.float().softmax(-1).cpu().numpy(); out = []
+def ctc_decode_with_confidence(logits_ctc, lens, drop_null=True, blank_penalty=None, stride=1):
+    """greedy CTC → list[dict(cls, conf, start, end)] ต่อคลิป ; conf = mean prob (หลัง penalty) ของเฟรมที่ emit token ; start/end คูณ stride กลับเป็นเฟรมจริง"""
+    probs = _penalise(logits_ctc, blank_penalty).float().softmax(-1).cpu().numpy(); out = []
     for p, L in zip(probs, lens):
         am = p[:L].argmax(-1); toks, prev, cur = [], BLANK, None
         for t, tok in enumerate(am):
@@ -41,9 +52,20 @@ def ctc_decode_with_confidence(logits_ctc, lens, drop_null=True):
         for tk in toks:
             if drop_null and SIGN_CLASSES[tk["cls"]] == NULL_CLASS:
                 continue
-            res.append(dict(cls=tk["cls"], conf=float(np.mean(tk["probs"])), start=tk["start"], end=tk["end"]))
+            res.append(dict(cls=tk["cls"], conf=float(np.mean(tk["probs"])), start=tk["start"] * stride, end=tk["end"] * stride))
         out.append(res)
     return out
+
+
+@torch.no_grad()
+def tune_blank_penalty(model, dl, grid=(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6), set_global=True):
+    """เลือก blank penalty ที่ให้ val WER ต่ำสุด → เขียนลง cfg.BLANK_PENALTY"""
+    import pandas as pd
+    rows = [dict(blank_penalty=bp, **{k: v for k, v in eval_sequence(model, dl, blank_penalty=bp).items() if k in ("wer", "cer", "sent_acc")}) for bp in grid]
+    df = pd.DataFrame(rows).sort_values(["wer", "cer"]).reset_index(drop=True)
+    if set_global:
+        cfg.BLANK_PENALTY = float(df.iloc[0]["blank_penalty"])
+    return df
 
 
 def wer_cer(refs_words, hyps_words):
@@ -71,11 +93,11 @@ def eval_isolated(model, dl, use_face=True):
 
 
 @torch.no_grad()
-def eval_sequence(model, dl, use_face=True):
+def eval_sequence(model, dl, use_face=True, blank_penalty=None):
     model.eval(); refs, hyps = [], []
     for x in dl:
         o = model(x["hand"].to(DEVICE), x["body"].to(DEVICE), x["face"].to(DEVICE), x["mask"].to(DEVICE), use_face)
-        hyps += [ids_to_words(s) for s in ctc_greedy_decode(o["logits_ctc"], x["lens"].tolist())]
+        hyps += [ids_to_words(s) for s in ctc_greedy_decode(o["logits_ctc"], model.ctc_lens(x["lens"]).tolist(), blank_penalty=blank_penalty)]
         i = 0
         for L in x["target_lens"].tolist():
             refs.append(ids_to_words([t - 1 for t in x["targets"][i:i + L].tolist()])); i += L
