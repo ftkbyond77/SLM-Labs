@@ -1,0 +1,13 @@
+prompt/prompt_cmd/
+
+.env
+data_test/
+data/
+outputs/
+memory/qdrant/
+memory_smoke/
+__pycache__/
+*.pyc
+
+archive/
+data_user_calib/
