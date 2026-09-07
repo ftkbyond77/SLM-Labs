@@ -1,0 +1,1478 @@
+{
+  "schema": 1,
+  "note": "gloss id -> Thai lemma for TSL-ONE-S. `source` records provenance: verified = checked by a person; spelling-table = resolved offline from the Thai letter names; llm = machine-proposed, unverified.",
+  "entries": {
+    "0001": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0002": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0003": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0004": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0005": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0006": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0007": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0008": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0009": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0010": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0020": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0028": {
+      "thai": "",
+      "english": "",
+      "category": "01",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0133": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0134": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0135": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0136": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0137": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0138": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0139": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0140": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0141": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0142": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0143": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0144": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0145": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0146": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0147": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0148": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0149": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0150": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0151": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0152": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0153": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0154": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0155": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0156": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0157": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0158": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0159": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0160": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0161": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0162": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0163": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0164": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0165": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0166": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0167": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0168": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0169": {
+      "thai": "",
+      "english": "",
+      "category": "04",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0197": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0198": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0199": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0200": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0201": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0202": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0203": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0204": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0205": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0206": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0207": {
+      "thai": "",
+      "english": "",
+      "category": "06",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0208": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0209": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0210": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0211": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0212": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0213": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0214": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0215": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0216": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0217": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0218": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0219": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0220": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0221": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0222": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0223": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0224": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0225": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0226": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0227": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0228": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0229": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0230": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0231": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0232": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0233": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0234": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0235": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0236": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0237": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0238": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0239": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0240": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0241": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0242": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0243": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0244": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0245": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0246": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0247": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0248": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0249": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0250": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0251": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0252": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0253": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0254": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0255": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0256": {
+      "thai": "",
+      "english": "",
+      "category": "07",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0257": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0258": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0259": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0260": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0261": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0262": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0263": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0264": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0265": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0266": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0267": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0268": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0269": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0270": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0271": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0272": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0273": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0274": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0275": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0276": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0277": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0278": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0279": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0280": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0281": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0282": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0283": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0284": {
+      "thai": "",
+      "english": "",
+      "category": "08",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0385": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0386": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0387": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0388": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0389": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0390": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0391": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0392": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0393": {
+      "thai": "",
+      "english": "",
+      "category": "13",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0911": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0912": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0913": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0914": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0915": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0916": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0917": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0918": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0919": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0920": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0921": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0922": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0923": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0924": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0925": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0926": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0927": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0928": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0929": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0930": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0931": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0932": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0933": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0934": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0935": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0936": {
+      "thai": "",
+      "english": "",
+      "category": "25",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0978": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0979": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0980": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0981": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0982": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0983": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0984": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0985": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0986": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0987": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0988": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    },
+    "0989": {
+      "thai": "",
+      "english": "",
+      "category": "28",
+      "source": "unfilled",
+      "confidence": 0.0,
+      "aliases": []
+    }
+  }
+}

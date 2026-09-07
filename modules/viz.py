@@ -38,8 +38,14 @@ def use_thai_font(size: int = 11) -> str:
 
 
 # ------------------------------------------------------------- skeleton ----
-def draw_skeleton(ax, frame: np.ndarray, title: str = "", show_missing: bool = True):
-    """frame: (75, 2) raw MediaPipe coords. Image coords -> y is flipped."""
+def draw_skeleton(ax, frame: np.ndarray, title: str = "", show_missing: bool = True,
+                  bbox: tuple | None = None):
+    """frame: (75, 2) raw MediaPipe coords. Image coords -> y is flipped.
+
+    `bbox = (x0, x1, y0, y1)` crops to a region instead of the whole frame -
+    used by the gloss identity cards, where the signer occupies a third of the
+    image and a full-frame view is too small to read a handshape from.
+    """
     pose, lh, rh = frame[POSE_SLICE], frame[LHAND_SLICE], frame[RHAND_SLICE]
 
     def seg(pts, edges, color, lw=1.6, ms=9):
@@ -62,7 +68,10 @@ def draw_skeleton(ax, frame: np.ndarray, title: str = "", show_missing: bool = T
         ax.text(0.02, 0.02, "right hand: not detected", transform=ax.transAxes,
                 color=PALETTE["rh"], fontsize=8)
 
-    ax.set_xlim(0, 1.05); ax.set_ylim(1.05, 0)
+    if bbox is None:
+        ax.set_xlim(0, 1.05); ax.set_ylim(1.05, 0)
+    else:
+        ax.set_xlim(bbox[0], bbox[1]); ax.set_ylim(bbox[3], bbox[2])
     ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([]); ax.grid(False)
     if title:
         ax.set_title(title, fontsize=10)
@@ -152,3 +161,118 @@ def score_hist(known: np.ndarray, unknown: np.ndarray, thr: float, ax=None,
     ax.set_xlabel("open-set score"); ax.set_ylabel("density")
     ax.set_title(title); ax.legend(fontsize=8)
     return ax
+
+
+# ------------------------------------------------ continuous utterances ----
+def utterance_map(clip, spans=None, labels=None, ax=None, energy=None,
+                  activity=None, decoded=None, class_names=None, title=""):
+    """One utterance on one axis: motion energy, where the signs really are, and
+    where the reader thinks they are.
+
+    Truth is drawn as a band along the top, the decode as a band along the
+    bottom, so a boundary that drifts is visible as a horizontal offset rather
+    than having to be read out of two separate plots.
+    """
+    from .continuous import motion_energy
+    ax = ax or plt.subplots(figsize=(12, 2.8))[1]
+    e = energy if energy is not None else motion_energy(clip)
+    ax.plot(e / (e.max() + 1e-9), color="#3F6FB5", lw=1.2, label="wrist motion energy")
+    if activity is not None:
+        f = len(clip) / max(len(activity), 1)
+        ax.plot(np.arange(len(activity)) * f, activity, color="#9B59B6", lw=1.4,
+                alpha=.85, label="model: sign being articulated")
+
+    def band(items, y0, h, colours, tag):
+        for it in items:
+            s, t = it["start"], it["end"]
+            ax.add_patch(plt.Rectangle((s, y0), t - s, h, color=colours(it),
+                                       alpha=.55, lw=0))
+            ax.text((s + t) / 2, y0 + h / 2, it["label"], ha="center", va="center",
+                    fontsize=8, color="#111")
+        ax.text(0, y0 + h / 2, tag, ha="right", va="center", fontsize=8, color="#555")
+
+    if spans is not None and labels is not None:
+        items = [{"start": s, "end": t,
+                  "label": (class_names[l] if class_names else str(l))}
+                 for (s, t), l in zip(spans, labels)]
+        band(items, 1.06, 0.12, lambda _: "#7F8C8D", "truth ")
+    if decoded is not None:
+        items = [{"start": d["start"], "end": d["end"], "label": d["gloss_id"]}
+                 for d in decoded]
+        band(items, -0.20, 0.12,
+             lambda d: "#2E9E7C" if not d["label"].startswith("_") else "#D9553B",
+             "decode ")
+    ax.set_ylim(-0.24, 1.24); ax.set_xlim(0, len(clip))
+    ax.set_yticks([]); ax.set_xlabel("frame")
+    ax.legend(fontsize=8, loc="upper right", ncol=2)
+    ax.set_title(title, fontsize=11)
+    return ax
+
+
+def posteriorgram(prob, blank_id, class_names=None, top_k=8, ax=None, title="",
+                  unk_id=None):
+    """The sequence head's output over time, restricted to the classes it
+    actually used. Plotting all 186 rows would be a black rectangle; the handful
+    that carry probability mass is what tells you whether the model committed to
+    a sign or hedged between two."""
+    ax = ax or plt.subplots(figsize=(12, 2.6))[1]
+    mass = prob.max(0).copy()
+    mass[blank_id] = 0
+    rows = np.argsort(-mass)[:top_k]
+    ax.imshow(prob[:, rows].T, aspect="auto", cmap="magma", vmin=0, vmax=1,
+              interpolation="nearest")
+    lab = []
+    for r in rows:
+        if unk_id is not None and r == unk_id:
+            lab.append("<unk>")
+        else:
+            lab.append(class_names[r] if class_names else str(r))
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels(lab, fontsize=8)
+    ax.set_xlabel("model step (4 video frames each)")
+    ax.set_title(title, fontsize=11); ax.grid(False)
+    return ax
+
+
+def segment_strip(clip, segments, title="", key="gloss_id", max_cols=8):
+    """A mid-stroke skeleton per decoded sign - the visual check that the reader
+    cut the utterance where a person would."""
+    segs = segments[:max_cols]
+    if not segs:
+        fig, ax = plt.subplots(figsize=(4, 2.4))
+        ax.text(.5, .5, "no segments decoded", ha="center"); ax.axis("off")
+        return fig
+    fig, axes = plt.subplots(1, len(segs), figsize=(2.5 * len(segs), 3.0),
+                             squeeze=False)
+    for ax, r in zip(axes[0], segs):
+        draw_skeleton(ax, clip[min((r["start"] + r["end"]) // 2, len(clip) - 1)],
+                      show_missing=False)
+        known = r.get("is_known", True)
+        sub = r.get("thai") or r.get("best_guess") or ""
+        ax.set_title(f"{r[key]}\n{sub}  f{r['start']}-{r['end']}", fontsize=9,
+                     color="#1B7F5A" if known else "#C0392B")
+    fig.suptitle(title, y=1.03, fontsize=11)
+    fig.tight_layout()
+    return fig
+
+
+def curriculum_curves(hists: dict, figsize=(12, 3.2)):
+    """Loss and validation WER across curriculum stages, laid end to end."""
+    fig, axes = plt.subplots(1, 3, figsize=figsize)
+    off = 0
+    for name, h in hists.items():
+        x = np.array(h["epoch"]) + off
+        axes[0].plot(x, h["ctc"], label=f"{name} CTC")
+        axes[0].plot(x, h["frame"], "--", label=f"{name} frame")
+        axes[1].plot(x, h["val_wer"], label=f"{name} CTC read-out")
+        if "val_wer_frame" in h:
+            axes[1].plot(x, h["val_wer_frame"], "--", label=f"{name} frame read-out")
+        axes[2].plot(x, h["val_exact"], label=name)
+        off += len(x)
+        for ax in axes:
+            ax.axvline(off - .5, color="#BBB", ls=":", lw=1)
+    for ax, t in zip(axes, ["training loss", "validation WER",
+                            "validation exact-match"]):
+        ax.set_xlabel("epoch (stages laid end to end)"); ax.set_title(t)
+        ax.legend(fontsize=7)
+    fig.tight_layout()
+    return fig

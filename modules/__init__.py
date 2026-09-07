@@ -1,6 +1,8 @@
 """TSL-ONE-S multimodal sign-language recognition pipeline."""
-from . import (config, continuous, data_io, dataset, evaluate,
-               feature_engineering, inference, models, openset, train, viz)
+from . import (composer, config, continuous, data_io, dataset, evaluate,
+               feature_engineering, inference, lexicon, models, openset, reader,
+               seq_model, seq_train, train, viz)
 
-__all__ = ["config", "continuous", "data_io", "dataset", "evaluate",
-           "feature_engineering", "inference", "models", "openset", "train", "viz"]
+__all__ = ["composer", "config", "continuous", "data_io", "dataset", "evaluate",
+           "feature_engineering", "inference", "lexicon", "models", "openset",
+           "reader", "seq_model", "seq_train", "train", "viz"]

@@ -198,8 +198,16 @@ FACE_GEO_NAMES = ["mouth_width", "jaw_drop", "ear_span", "eye_mouth",
                   "roll_cos", "roll_sin", "head_dx", "head_dy"]
 
 
-def clip_to_streams(clip: np.ndarray, cfg: FeatureConfig) -> dict:
-    """raw (T,75,2) -> {lh, rh, pose, face}, each (cfg.n_frames, D) float32."""
+def clip_to_streams(clip: np.ndarray, cfg: FeatureConfig,
+                    resample: bool = True) -> dict:
+    """raw (T,75,2) -> {lh, rh, pose, face}, each (cfg.n_frames, D) float32.
+
+    `resample=False` keeps the clip's native length. That is what the continuous
+    (utterance-level) model needs: a sentence must stay frame-synchronous so the
+    sequence head can say *when* each sign happened, and squashing a 300-frame
+    utterance into 64 frames would destroy exactly that information. The feature
+    definitions are otherwise identical, so the same standardiser applies to both.
+    """
     x = _nan_from_zeros(np.asarray(clip, dtype=np.float32))
     lh_present = (~np.isnan(x[:, LHAND_SLICE]).all(axis=(1, 2))).astype(np.float32)
     rh_present = (~np.isnan(x[:, RHAND_SLICE]).all(axis=(1, 2))).astype(np.float32)
@@ -214,13 +222,15 @@ def clip_to_streams(clip: np.ndarray, cfg: FeatureConfig) -> dict:
         rh = np.repeat(pose[:, R_WRIST][:, None], 21, axis=1)
     neck, scale = body_frame(pose)
 
-    n = cfg.n_frames
-    return {
-        "lh": resample_time(_hand_stream(lh, neck, scale, lh_present, cfg), n),
-        "rh": resample_time(_hand_stream(rh, neck, scale, rh_present, cfg), n),
-        "pose": resample_time(_pose_stream(pose, lh, rh, neck, scale, cfg), n),
-        "face": resample_time(_face_stream(pose, neck, scale, cfg), n),
+    raw = {
+        "lh": _hand_stream(lh, neck, scale, lh_present, cfg),
+        "rh": _hand_stream(rh, neck, scale, rh_present, cfg),
+        "pose": _pose_stream(pose, lh, rh, neck, scale, cfg),
+        "face": _face_stream(pose, neck, scale, cfg),
     }
+    if not resample:
+        return {k: np.ascontiguousarray(v, dtype=np.float32) for k, v in raw.items()}
+    return {k: resample_time(v, cfg.n_frames) for k, v in raw.items()}
 
 
 def build_feature_bank(clips, cfg: FeatureConfig, progress: bool = True) -> dict:

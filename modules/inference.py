@@ -19,6 +19,60 @@ VIDEO_EXT = {".mp4", ".mov", ".avi", ".webm", ".mkv"}
 UNKNOWN = "_"
 
 
+def aspect_correct(clip: np.ndarray, aspect: float) -> np.ndarray:
+    """Undo the anisotropy that MediaPipe's normalised coordinates introduce.
+
+    MediaPipe divides x by the frame width and y by the frame height
+    *independently*, so the same body recorded at 16:9 and at 1:1 produces
+    different geometry: every horizontal distance is squashed by the aspect
+    ratio relative to every vertical one. Nothing downstream removes this - the
+    body-frame normalisation in `feature_engineering` divides both axes by a
+    single scalar (shoulder width), which cannot undo an axis-dependent scale.
+
+    Measured on this workspace: shoulder-width / torso-height is 0.79 across all
+    29 corpus signers - which is also the anatomical value for a real person -
+    and 0.39 on the two 16:9 recordings in `data_test/`. The corpus is therefore
+    effectively square-pixel and the new recordings are not, and every geometric
+    feature on them was distorted by ~2x along x.
+
+    Multiplying x by width/height restores square pixels. Scaling is about the
+    frame centre so the skeleton stays roughly in frame for plotting; the
+    features are neck-centred anyway, so the choice of centre is cosmetic.
+    """
+    out = np.asarray(clip, dtype=np.float32).copy()
+    miss = (out == 0).all(-1)
+    out[..., 0] = 0.5 + (out[..., 0] - 0.5) * float(aspect)
+    out[miss] = 0.0
+    return out
+
+
+def video_aspect(path: Path) -> float:
+    """Frame width / height of a video file, or NaN if it cannot be read."""
+    try:
+        import cv2
+        cap = cv2.VideoCapture(str(path))
+        w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        cap.release()
+        return float(w / h) if w and h else float("nan")
+    except Exception:
+        return float("nan")
+
+
+def body_aspect_ratio(clip: np.ndarray) -> float:
+    """shoulder width / torso height, median over the clip.
+
+    A pure geometry statistic with a known anatomical value (~0.8), so it works
+    as an aspect-distortion detector on any recording, corpus or not.
+    """
+    p = clip[:, :33]
+    sw = np.linalg.norm(p[:, 11] - p[:, 12], axis=-1)
+    th = np.linalg.norm(0.5 * (p[:, 11] + p[:, 12]) - 0.5 * (p[:, 23] + p[:, 24]),
+                        axis=-1)
+    ok = (sw > 1e-3) & (th > 1e-3)
+    return float(np.median(sw[ok] / th[ok])) if ok.any() else float("nan")
+
+
 # --------------------------------------------------------- gloss lexicon ---
 def gloss_display(gloss_id: str, lexicon: dict | None = None) -> str:
     """Surface form for a gloss id.
@@ -123,7 +177,7 @@ _TASK_URLS = {
 
 
 def extract_from_video(path: Path, cache_dir: Path | None = None,
-                       max_frames: int = 300) -> np.ndarray:
+                       max_frames: int = 300, square_pixels: bool = False):
     """Video -> (T, 75, 2) in the exact TSL-ONE-S landmark order.
 
     Requires the two MediaPipe Tasks bundles; they are fetched once into
@@ -154,6 +208,8 @@ def extract_from_video(path: Path, cache_dir: Path | None = None,
 
     cap = cv2.VideoCapture(str(path))
     fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    W = cap.get(cv2.CAP_PROP_FRAME_WIDTH) or 1.0
+    H = cap.get(cv2.CAP_PROP_FRAME_HEIGHT) or 1.0
     frames, t = [], 0
     while len(frames) < max_frames:
         ok, bgr = cap.read()
@@ -176,7 +232,10 @@ def extract_from_video(path: Path, cache_dir: Path | None = None,
     cap.release()
     if not frames:
         raise RuntimeError(f"no frames decoded from {path}")
-    return np.stack(frames)
+    out = np.stack(frames)
+    if square_pixels:
+        out = aspect_correct(out, W / max(H, 1.0))
+    return out
 
 
 # ------------------------------------------------------- LLM  +  speech ----
